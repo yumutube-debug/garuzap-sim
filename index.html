@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SILVER BACKS ACADEMY 計量日までの減量シュミレーター</title>
+<style>
+:root{color-scheme:dark;--bg:#0B0B0D;--panel:#16161A;--panel2:#0F0F12;--line:rgba(212,175,55,.3);--tx:#F5F5F7;--sub:#A0A0A8;--water:#F5F5F7;--fat:#D4AF37;--gold:#D4AF37;--champ:#E5C158;--warn:#ff7b72;--ok:#6ee7a8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:radial-gradient(90% 360px at 50% 0,rgba(212,175,55,.08),transparent) no-repeat,var(--bg);color:var(--tx);font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",system-ui,-apple-system,sans-serif;line-height:1.6;-webkit-text-size-adjust:100%;font-variant-numeric:tabular-nums}
+main{max-width:520px;margin:0 auto;padding:20px 16px 120px}
+header{text-align:center;padding:18px 0 20px}
+.brand{margin:0;font-family:"Montserrat","Helvetica Neue","Roboto",Arial,sans-serif;font-weight:900;font-size:clamp(18px,5.8vw,34px);letter-spacing:.06em;line-height:1.15;white-space:nowrap;color:#D4AF37;background:linear-gradient(175deg,#F3E5AB 0%,#D4AF37 45%,#AA771C 78%,#D4AF37 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.by{margin:8px 0 0;font-size:11px;letter-spacing:.1em;color:var(--sub)}
+.by i{font-style:italic;font-weight:300;margin-right:4px}
+.by b{font-style:normal;font-weight:800;font-size:13px;letter-spacing:.14em;color:#D4AF37;background:linear-gradient(175deg,#F3E5AB 0%,#D4AF37 50%,#AA771C 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tool{display:flex;align-items:center;gap:12px;margin:16px 0 0}
+.tool::before,.tool::after{content:"";flex:1;height:1px}
+.tool::before{background:linear-gradient(90deg,transparent,#D4AF37)}
+.tool::after{background:linear-gradient(270deg,transparent,#D4AF37)}
+.tool span{white-space:nowrap;font-size:clamp(13px,4vw,16px);font-weight:700;letter-spacing:.04em;padding:6px 16px;border-radius:999px;background:#0B0B0D;border:1px solid #D4AF37;color:#E5C158}
+.lead{color:var(--sub);font-size:13px;margin:0 0 20px;text-align:center}
+section{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:inset 0 1px 0 rgba(243,229,171,.07)}
+h2{font-size:15px;margin:0 0 12px;color:var(--sub);font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px}
+input[type=number],select{width:100%;height:52px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--tx);font-size:19px;padding:0 12px;font-family:inherit}
+select{font-size:15px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--champ);outline-offset:2px}
+input{caret-color:#E5C158}
+.full{grid-column:1/-1}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--panel2);border-radius:12px;padding:4px;border:1px solid var(--line)}
+.seg button{height:42px;border:0;border-radius:9px;background:transparent;color:var(--sub);font-size:15px;font-family:inherit}
+.seg button:active{transform:scale(.97)}
+.seg button[aria-pressed=true]{background:linear-gradient(180deg,#E5C158,#D4AF37 55%,#B8922A);color:#1a1405;font-weight:800;box-shadow:0 0 0 1px #F3E5AB inset}
+.sl-head{display:flex;justify-content:space-between;align-items:baseline}
+.sl-head b{color:var(--champ);font-size:18px;font-weight:800}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:44px;margin:2px 0;background:transparent;accent-color:#D4AF37;--fill:40%}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,#AA771C,#D4AF37 var(--fill),#2b2b31 var(--fill))}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:#2b2b31}
+input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:#D4AF37}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-12px;border-radius:50%;border:2px solid #0B0B0D;background:radial-gradient(circle at 35% 30%,#F3E5AB,#D4AF37 55%,#AA771C);box-shadow:0 0 0 1px #D4AF37,0 2px 8px rgba(0,0,0,.6);transition:transform .12s,box-shadow .12s}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;border:2px solid #0B0B0D;background:#D4AF37;box-shadow:0 0 0 1px #D4AF37}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.18);box-shadow:0 0 0 1px #E5C158,0 0 0 8px rgba(212,175,55,.25)}
+.hint{font-size:12px;color:var(--sub);margin:0}
+.big{display:flex;align-items:baseline;gap:6px}
+.big b{font-size:44px;line-height:1.1;color:var(--champ);font-weight:800}
+.big span{color:var(--sub);font-size:15px}
+.bar{display:flex;height:16px;border-radius:8px;overflow:hidden;background:var(--panel2);margin:14px 0 10px}
+.bar i{display:block;transition:width .25s}
+.b-fat{background:var(--fat)}.b-water{background:var(--water)}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.legend div{background:var(--panel2);border-radius:12px;padding:10px 12px}
+.legend small{display:block;color:var(--sub);font-size:12px}
+.legend b{font-size:22px;color:var(--champ);font-weight:800}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.kcal{font-size:40px;font-weight:800;line-height:1.1;color:var(--champ)}
+.pfc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.pfc div{background:var(--panel2);border-radius:12px;padding:10px;text-align:center}
+.pfc small{display:block;color:var(--sub);font-size:11px}
+.pfc b{font-size:22px;font-weight:800}
+.pfc em{font-style:normal;font-size:12px;color:var(--sub)}
+.meta{display:flex;justify-content:space-between;color:var(--sub);font-size:12px;margin-top:10px}
+.alerts{display:grid;gap:8px;margin-bottom:14px}
+.alert{border-radius:12px;padding:12px 14px;font-size:14px;font-weight:700;line-height:1.6;border:1px solid var(--warn);border-left-width:6px;background:rgba(255,92,80,.16);color:#ffd9d4}
+.alert.info{border-color:var(--gold);border-left-width:1px;font-weight:600;color:var(--tx);background:rgba(212,175,55,.08)}
+.alert.ok{border-color:var(--ok);border-left-width:1px;font-weight:600;color:var(--tx);background:rgba(110,231,168,.08)}
+.alert small{display:block;margin-top:4px;color:var(--sub);font-size:12px;font-weight:400}
+.quota{margin-top:10px;background:var(--panel2);border-radius:12px;padding:10px 12px;border:1px solid transparent}
+.quota small{display:block;color:var(--sub);font-size:12px}
+.quota b{font-size:16px;color:var(--champ);font-weight:800}
+.quota .qn{display:block;margin-top:4px;font-size:12px;color:var(--warn)}
+.quota.hi{border-color:var(--warn)}
+.food{margin-top:12px}
+.food summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;border:1px solid #D4AF37;border-radius:12px;background:var(--panel2);color:var(--champ);font-weight:700;font-size:14px;-webkit-tap-highlight-color:transparent}
+.food summary::-webkit-details-marker{display:none}
+.food summary:active{background:rgba(212,175,55,.14)}
+.food summary:focus-visible{outline:2px solid var(--champ);outline-offset:2px}
+.ar{display:inline-block;font-size:11px;transition:transform .15s}
+.food[open] .ar{transform:rotate(90deg)}
+.fbody{padding-top:12px;display:grid;gap:10px}
+.fi{background:var(--panel2);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.7}
+.fi small{display:block;color:var(--sub);font-size:12px}
+.fi b{color:var(--champ);font-weight:800}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--sub);font-weight:600;padding:6px 6px;border-bottom:1px solid var(--line);font-size:12px}
+td{padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.d{white-space:nowrap;font-weight:700}
+td.d small{display:block;color:var(--sub);font-weight:400;font-size:11px}
+td.w{white-space:nowrap;color:var(--champ);font-weight:800;font-size:16px}
+tr.day0 td{background:rgba(212,175,55,.09)}
+.note{font-size:12px;color:var(--sub);margin:4px 2px 0}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:rgba(11,11,13,.95);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.bottom div{max-width:520px;margin:0 auto;display:flex;justify-content:space-around;text-align:center}
+.bottom small{display:block;color:var(--sub);font-size:11px}
+.bottom b{font-size:20px;color:var(--champ);font-weight:800}
+@media (prefers-reduced-motion:reduce){.bar i,.ar{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1 class="brand">SILVER BACKS ACADEMY</h1>
+<p class="by"><i>powered by</i> <b>GARUZAP</b></p>
+<div class="tool"><span>計量日までの減量シュミレーター</span></div>
+</header>
+<p class="lead">数字を入れると、食事で落とす分と水抜きの分、1日の摂取カロリー、直前5日間の予定がすぐ出ます。</p>
+
+<section>
+<h2>体重と期限</h2>
+<div class="grid">
+<div><label for="weight">現在の体重（kg）</label><input id="weight" type="number" inputmode="decimal" step="0.1" value="70"></div>
+<div><label for="target">目標体重（kg）</label><input id="target" type="number" inputmode="decimal" step="0.1" value="66"></div>
+<div class="full"><label for="days">計量日までの残り日数（日）</label><input id="days" type="number" inputmode="numeric" step="1" min="1" value="21"></div>
+</div>
+</section>
+
+<section>
+<h2>消費カロリーの計算用</h2>
+<div class="grid">
+<div><label for="height">身長（cm）</label><input id="height" type="number" inputmode="decimal" value="172"></div>
+<div><label for="age">年齢</label><input id="age" type="number" inputmode="numeric" value="28"></div>
+<div class="full"><label>性別</label>
+<div class="seg" id="sex"><button type="button" data-v="m" aria-pressed="true">男性</button><button type="button" data-v="f" aria-pressed="false">女性</button></div></div>
+<div class="full"><label for="act">活動レベル</label>
+<select id="act">
+<option value="1.2">ほぼ運動しない（1.2）</option>
+<option value="1.375">週1〜3回の軽い運動（1.375）</option>
+<option value="1.55" selected>週3〜5回の運動（1.55）</option>
+<option value="1.725">ほぼ毎日ハードな練習（1.725）</option>
+<option value="1.9">1日2回練習・肉体労働（1.9）</option>
+</select></div>
+</div>
+</section>
+
+<section>
+<h2>水抜きの割合</h2>
+<div class="sl-head"><label for="pct" style="margin:0">計量直前に水分で落とす量</label><b id="pctLabel">2.0%</b></div>
+<input id="pct" type="range" min="0" max="5" step="0.5" value="2">
+<p class="hint" id="pctKg"></p>
+</section>
+
+<div class="alerts" id="alerts"></div>
+
+<section>
+<h2>落とす体重</h2>
+<div class="big"><b id="total">0</b><span>kg</span></div>
+<div class="bar"><i class="b-fat" id="barFat"></i><i class="b-water" id="barWater"></i></div>
+<div class="legend">
+<div><small><span class="dot b-fat"></span>食事・運動で脂肪を落とす</small><b id="fat">0</b> kg</div>
+<div><small><span class="dot b-water"></span>直前の水分調整</small><b id="water">0</b> kg</div>
+</div>
+<div class="quota" id="quotaBox"><small>水抜き前の減量ノルマ</small><b id="quota">–</b><span class="qn" id="quotaNote"></span></div>
+</section>
+
+<section>
+<h2>1日の目標摂取カロリー</h2>
+<div class="kcal"><span id="kcal">0</span> <span style="font-size:16px;color:var(--sub);font-weight:400">kcal</span></div>
+<div class="pfc">
+<div><small>タンパク質 35%</small><b id="p">0</b><em>g</em></div>
+<div><small>脂質 20%</small><b id="f">0</b><em>g</em></div>
+<div><small>炭水化物 45%</small><b id="c">0</b><em>g</em></div>
+</div>
+<details class="food">
+<summary><span class="ar">▶</span> 1日の食事メニュー例を見る</summary>
+<div class="fbody">
+<div class="fi"><small>朝食</small><span id="fB">–</span></div>
+<div class="fi"><small>昼食</small><span id="fL">–</span></div>
+<div class="fi"><small>夕食</small><span id="fD">–</span></div>
+<div class="fi"><small>間食・練習後</small><span id="fS">–</span></div>
+<div class="fi"><small>脂質（調理油・ナッツなど）</small><span id="fF">–</span></div>
+<p class="note">目標カロリーに合わせて、ご飯・肉・卵・プロテインの量が増減します。ご飯は炊いた白米（茶碗1杯＝約150g）、鶏むね肉は生の重さです。体重の落ち方を見て、ご飯と間食で微調整してください。</p>
+</div>
+</details>
+<div class="meta"><span>基礎代謝 <b id="bmr">0</b> kcal</span><span>1日の消費 <b id="tdee">0</b> kcal</span></div>
+</section>
+
+<section>
+<h2>計量までの日別スケジュール</h2>
+<div class="tbl"><table>
+<thead><tr><th>日</th><th>水分</th><th>食事・調整のポイント</th></tr></thead>
+<tbody id="sched"></tbody>
+</table></div>
+<p class="note">水分は1日に分けて少しずつ。体重 <span id="wnote"></span>kg を基準にした目安です。</p>
+</section>
+
+<p class="note">これは一般的な目安で、医療アドバイスではありません。持病がある人、18歳未満の人、体調が悪い人は水抜きをせず、医師や経験のあるコーチに相談してください。めまい・頭痛・強いだるさが出たら、すぐに水分と食事を戻してください。</p>
+</main>
+
+<div class="bottom"><div>
+<span><small>総減量</small><b id="bTotal">–</b></span>
+<span><small>目標カロリー</small><b id="bKcal">–</b></span>
+<span><small>水抜き</small><b id="bWater">–</b></span>
+</div></div>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+var sex='m';
+var ids=['weight','target','days','height','age','act','pct'];
+function r1(x){return (Math.round(x*10)/10).toFixed(1)}
+function r0(x){return Math.round(x)}
+
+function save(){
+  try{var o={sex:sex};ids.forEach(function(i){o[i]=$(i).value});localStorage.setItem('wcsim',JSON.stringify(o))}catch(e){}
+}
+function load(){
+  try{
+    var o=JSON.parse(localStorage.getItem('wcsim')||'null');
+    if(!o)return;
+    ids.forEach(function(i){if(o[i]!==undefined)$(i).value=o[i]});
+    if(o.sex)setSex(o.sex,true);
+  }catch(e){}
+}
+function setSex(v,silent){
+  sex=v;
+  document.querySelectorAll('#sex button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false')});
+  if(!silent)calc();
+}
+
+function row(label,date,water,text,cls){
+  return '<tr class="'+(cls||'')+'"><td class="d">'+label+'<small>'+date+'</small></td><td class="w">'+water+'</td><td>'+text+'</td></tr>';
+}
+
+function calc(){
+  var w=+$('weight').value,t=+$('target').value,d=Math.floor(+$('days').value),
+      h=+$('height').value,a=+$('age').value,act=+$('act').value,pct=+$('pct').value;
+  $('pctLabel').textContent=pct.toFixed(1)+'%';
+  $('pct').style.setProperty('--fill',(pct/5*100)+'%');
+  $('pctKg').textContent=w>0?('約 '+r1(w*pct/100)+' kg（現在の体重 '+w+' kg に対する割合）'):'';
+  var al=[];
+  if(!(w>0&&t>0&&d>=1&&h>0&&a>0)){
+    $('alerts').innerHTML='<div class="alert info">すべての項目に数字を入れると結果が表示されます。</div>';
+    return;
+  }
+  var total=Math.max(w-t,0);
+  var water=Math.min(w*pct/100,total);
+  var fat=total-water;
+  var bmr=10*w+6.25*h-5*a+(sex==='m'?5:-161);
+  var tdee=bmr*act;
+  var kcal,short=0;
+  if(total<=0){
+    kcal=tdee;
+    al.push('<div class="alert info">目標体重が現在の体重以下ではありません。体重を維持するカロリーを表示しています。</div>');
+  }else{
+    var need=fat*7200/d;
+    kcal=tdee-need;
+    var floor=Math.max(bmr,sex==='m'?1500:1200);
+    if(kcal<floor){
+      kcal=floor;
+      short=fat-(tdee-kcal)*d/7200;
+      al.push('<div class="alert">⚠️ 現在の設定では計量日に間に合いません（日数を増やすか、直前の水抜き割合を上げてください）<small>不足の目安：約 '+r1(short)+' kg（カロリー下限 '+r0(floor)+' kcal）</small></div>');
+    }else{
+      al.push('<div class="alert ok">✅ 計量日までに達成可能なペースです</div>');
+    }
+  }
+  if(pct>3)al.push('<div class="alert">水抜き3%超は脱水のリスクが高い範囲です。必ず経験のあるコーチや医師の管理下で行ってください。</div>');
+  if(a<18&&pct>0)al.push('<div class="alert">18歳未満の水抜きは推奨されません。水抜きは0%にして、食事での調整だけにしてください。</div>');
+  if(water<w*pct/100-0.001&&total>0)al.push('<div class="alert info">落とす総量が小さいため、水抜きは '+r1(water)+' kg に自動で絞っています。</div>');
+  $('alerts').innerHTML=al.join('');
+
+  // PFC
+  var p=kcal*0.35/4,f=kcal*0.2/9;
+  var cc=kcal*0.45/4;
+  
+  if(cc<0)cc=0;
+
+  $('total').textContent=r1(total);
+  var weekly=fat/d*7,perDay=fat/d*1000,hi=total>0&&Math.round(weekly*10)>=10;
+  $('quota').textContent='週 '+r1(weekly)+'kg減（1日あたり約'+r0(perDay)+'gペース）';
+  $('quotaBox').classList.toggle('hi',hi);
+  $('quotaNote').textContent=hi?'※かなりハードな減量ペースです':'';
+  var rb=Math.max(0,(cc-20)/55),hb=function(x){return Math.max(0,Math.round(x*2)/2)},bm=hb(rb*0.3),bl=hb(rb*0.5),bd=hb(rb*0.2),bw=function(x){return x===0.5?'茶碗 軽く半分':(x===1?'茶碗1杯':'茶碗'+x+'杯')},eggs=Math.min(3,Math.max(1,Math.round((p*0.2-7)/6))),chk=Math.min(250,Math.max(100,Math.round(p*0.3/0.23/10)*10)),fish=Math.min(3,Math.max(1,Math.round((p*0.3-10)/18))),meat=Math.min(250,Math.max(100,Math.round((p*0.3-10)/0.21/10)*10)),got=eggs*6+7+chk*0.23+fish*18+10+(bm+bl+bd)*4,sc=Math.min(3,Math.max(0.5,Math.round((p-got)/22*2)/2)),oil=f-(eggs*5+4+chk*0.02+fish*5+5+sc*2);
+  $('fB').innerHTML=(bm>0?'オートミール 約<b>'+bm*80+'g</b>（乾）（または白米 '+bw(bm)+'）':'主食なし（卵・納豆中心）')+' ＋ ゆで卵 <b>'+eggs+'個</b> ＋ 納豆 1パック';
+  $('fL').innerHTML='鶏むね肉（またはサラダチキン） 約<b>'+chk+'g</b>'+(bl>0?' ＋ 白米 <b>'+bw(bl)+'</b>':'')+' ＋ 野菜スープ';
+  $('fD').innerHTML='焼き魚（鮭やサバ） <b>'+fish+'切れ</b>（または赤身肉 約<b>'+meat+'g</b>） ＋ 豆腐 半丁 ＋ 温野菜'+(bd>0?' ＋ 白米 '+bw(bd)+'（夜は糖質控えめ）':'（夜は糖質控えめ・ごはんなし）');
+  $('fS').innerHTML='プロテイン <b>'+sc+'杯</b>';
+  
+  $('fF').innerHTML='1日 約<b>'+r0(f)+'g</b>。'+(oil>=4?'肉・魚・卵に含まれる分を引くと、調理油やナッツは 約<b>'+r0(oil)+'g</b>（小さじ約'+r1(oil/4)+'杯）まで。':'食材に含まれる脂質だけでほぼ足ります。調理油はほぼ使わず、焼く・茹でる・蒸す調理が中心です。');
+  $('fat').textContent=r1(fat);
+  $('water').textContent=r1(water);
+  $('barFat').style.width=(total>0?fat/total*100:0)+'%';
+  $('barWater').style.width=(total>0?water/total*100:0)+'%';
+  $('kcal').textContent=r0(kcal).toLocaleString();
+  $('p').textContent=r0(p);$('f').textContent=r0(f);$('c').textContent=r0(cc);
+  $('bmr').textContent=r0(bmr).toLocaleString();$('tdee').textContent=r0(tdee).toLocaleString();
+  $('wnote').textContent=w;
+  $('bTotal').textContent=r1(total)+'kg';
+  $('bKcal').textContent=r0(kcal).toLocaleString()+'kcal';
+  $('bWater').textContent=r1(water)+'kg';
+
+  // Schedule
+  var rows='',start=Math.min(d,5),now=new Date(),useCut=water>0.05;
+  var load=(50+10*pct)*w/1000, norm=40*w/1000;
+  var kc=r0(kcal).toLocaleString()+' kcal';
+  for(var i=start;i>=0;i--){
+    var dt=new Date(now.getFullYear(),now.getMonth(),now.getDate()+d-i);
+    var ds=(dt.getMonth()+1)+'/'+dt.getDate();
+    var lb=i===0?'計量日':i+'日前';
+    var L,txt;
+    if(!useCut){
+      L=norm;
+      txt=i===0?'軽めの食事で計量へ。計量後は水分・塩分・炭水化物をしっかり補給。':
+        (i<=1?'消化のよい食事。食べ過ぎず、水分はいつも通り。':'目標カロリー '+kc+'。いつも通りの水分と塩分。');
+    }else if(i>=3){
+      L=load;
+      txt='ウォーターローディング。水を少しずつ分けて飲む。塩分は普段通り、食事は '+kc+'。';
+    }else if(i===2){
+      L=load*0.5;
+      txt='水分を半分に。塩分をカットし、食物繊維を控えて（低残渣）お腹の中身を減らす。';
+    }else if(i===1){
+      L=Math.min(15*w/1000,load*0.3);
+      txt='口をうるおす程度に。塩分ゼロ、白米・うどんなど消化のよい少量の食事。体調をこまめに確認。';
+    }else{
+      L=0.3;
+      txt='計量まで0.3L以下。つらければ無理せず中止。計量後はスポーツドリンク＋塩分＋炭水化物を少しずつ。';
+    }
+    rows+=row(lb,ds,(i===0&&useCut?'〜':'')+L.toFixed(1)+'L',txt,i===0?'day0':'');
+  }
+  if(d<5)rows+='<tr><td colspan="3" class="note">残り日数が5日未満のため、ウォーターローディングは短縮しています。</td></tr>';
+  $('sched').innerHTML=rows;
+  save();
+}
+
+document.querySelectorAll('#sex button').forEach(function(b){b.addEventListener('click',function(){setSex(b.dataset.v)})});
+ids.forEach(function(i){$(i).addEventListener('input',calc);$(i).addEventListener('change',calc)});
+load();calc();
+})();
+</script>
+</body>
+</html>
